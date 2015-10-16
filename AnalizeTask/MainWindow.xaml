@@ -1,0 +1,381 @@
+﻿<Controls:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:p="clr-namespace:AnalizeTask.Properties"
+       xmlns:w="clr-namespace:AnalizeTask"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:AnalizeTask.View"
+        xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"            
+        xmlns:Models="clr-namespace:AnalizeTask.Models" xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock" x:Class="AnalizeTask.MainWindow"  
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        Title="Анализ задач" 
+        Height="350" 
+        Width="891" 
+        ShowTitleBar="True" 
+        ShowIconOnTitleBar="True"
+        EnableDWMDropShadow="True"
+        ResizeMode="CanResizeWithGrip"
+        WindowTransitionsEnabled="False"
+        WindowStartupLocation="CenterScreen" Closing="MetroWindow_Closing_1" Loaded="MetroWindow_Loaded_1" Unloaded="MetroWindow_Unloaded_1" Activated="MetroWindow_Activated" Initialized="MetroWindow_Initialized" >
+    <Controls:MetroWindow.DataContext>
+        <local:TaskView/>
+    </Controls:MetroWindow.DataContext>
+
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid 
+                  Margin="4"
+                  Background="Transparent"
+                  RenderOptions.EdgeMode="Aliased"
+                  RenderOptions.BitmapScalingMode="HighQuality">
+                <Rectangle Fill="White">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Visual="{StaticResource appbar_language_csharp}" Stretch="Uniform" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Grid>
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                            Visual="{StaticResource appbar_list_add_below}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <Button Content="Добавить заявки" x:Name="AddTask" Command="{Binding ClickCommandAddTask}"/>
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                            Visual="{StaticResource appbar_list_delete}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <Button Content="Удалить заявки" x:Name="RemoveTask" Command="{Binding ClickCommandDeleteTask}"/>
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                            Visual="{StaticResource appbar_cogs}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <Button Content="Анализ" x:Name="AnalizeBtn" Command="{Binding ClickCommand}"/>
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                            Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <ToggleButton Content="Настройка"  x:Name="TaskInfo"
+                IsChecked="{Binding IsOpen, ElementName=Flyout}" Cursor="Hand"/>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                            Visual="{StaticResource appbar_save}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <Button Content="Сохранить" x:Name="SaveTask" Click="SaveTask_Click"/>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout Header="Настройка" Position="Right" Width="300" x:Name="Flyout" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <ScrollViewer>
+                        <StackPanel>
+                            <TextBlock ><Run Text="Настройки темы"/></TextBlock>
+                            <Controls:SplitButton
+            					Icon="{DynamicResource appbar_draw_brush_reflection}"
+            					HorizontalContentAlignment="Left"
+            					HorizontalAlignment="Center"
+            					VerticalContentAlignment="Center"
+            					Width="300"
+            					ItemsSource="{Binding ColorsModel, Mode=TwoWay}"
+            					DisplayMemberPath="colors"
+            					x:Name="ColorButton"
+            					SelectedIndex="{Binding Color, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+            					VerticalAlignment="Center" />
+                            <Controls:SplitButton
+            					Icon="{DynamicResource appbar_draw_brush}"
+            					HorizontalContentAlignment="Left"
+            					HorizontalAlignment="Center"
+            					VerticalContentAlignment="Center"
+            					Width="300"
+            					ItemsSource="{Binding themModel, Mode=TwoWay}"
+            					SelectedIndex="{Binding Them, Mode=TwoWay, Source={x:Static p:Settings.Default}}"
+            					DisplayMemberPath="colors"
+            					x:Name="ColorThem"
+            					VerticalAlignment="Center" />
+                            <TextBlock ><Run Text="Настройки Приложения"/></TextBlock>
+                            <TextBlock ><Run Text="URL к СервисДеску"/></TextBlock>
+                            <TextBox Text="{Binding URL, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <TextBlock ><Run Text="Логин для СервисДеску"/></TextBlock>
+                            <TextBox Text="{Binding Login, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <TextBlock ><Run Text="Пароль для СервисДеску"/></TextBlock>
+                            <PasswordBox w:PasswordHelper.Attach="True"
+            					w:PasswordHelper.Password="{Binding Password, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+
+                            <TextBlock ><Run Text="Домен для СервисДеску"/></TextBlock>
+                            <TextBox Text="{Binding Domain, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <CheckBox  Content="Автообновление" IsChecked="{Binding AutoUpdate, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <TextBlock ><Run Text="Автоматическое обновление(в минутах)"/></TextBlock>
+                            <TextBox Text="{Binding Refresh, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <CheckBox  Content="Поле Срок выполнение" IsChecked="{Binding VisibleDedLine, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <CheckBox  Content="Поле Отклонение в днях" IsChecked="{Binding VisibleMinus, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                            <!--<Button Content="Статусы заявок" x:Name="btnTaskStatusWindow" Click="WindowsTaskStatus_Click"/>-->
+                            <Button Content="Применить" x:Name="AddColor" Click="AddColor_Click"/>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </Grid>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+
+    </Controls:MetroWindow.Flyouts>
+    <Grid>
+       
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="375*"/>
+            <ColumnDefinition Width="508*"/>
+        </Grid.ColumnDefinitions>
+        <Popup x:Name="pLink" Placement="Mouse" PopupAnimation="Slide" AllowsTransparency="True" StaysOpen="False" DataContext="{Binding TaskModel}" Grid.ColumnSpan="2">
+            <Border BorderBrush="LightBlue" BorderThickness="2" Background="White" >
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!--<TextBlock Text="{Binding Path=TaskName}" />-->
+                    <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Height="24" Width="24" Source="{Binding Image24}"/>
+                            <TextBlock Text="{Binding TaskId, Mode=TwoWay}" FontWeight="Bold"/>
+                            <TextBlock Text="." FontWeight="Bold"/>
+                            <TextBlock Text="{Binding TaskName, Mode=TwoWay}" FontWeight="Bold" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ServiceName, Mode=TwoWay}"/>
+                            <TextBlock Text="/"/>
+                            <Image Height="16" Width="16" Source="{Binding ImageTaskType}"/>
+                            <TextBlock Text="{Binding Type, Mode=TwoWay}" />
+                        </StackPanel>
+                        <TextBlock Text=""/>
+                        <TextBlock Text="Название:"/>
+                        <TextBlock Text="{Binding TaskName, Mode=TwoWay}" FontWeight="Bold" />
+                        <TextBlock Text=""/>
+                        <TextBlock Text="Описание:"/>
+                        <TextBlock Text="{Binding Description, Mode=TwoWay}" FontWeight="Bold" />
+                        <TextBlock Text=""/>
+                        <StackPanel>
+                            <Grid >
+                                <Grid.RowDefinitions >
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
+                                    <TextBlock Text="Статус:"/>
+                                    <TextBlock Text="{Binding StatusName, Mode=TwoWay}" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0"/>
+                                <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="0">
+                                    <TextBlock Text="Приоритет:"/>
+                                    <TextBlock Text="{Binding PriorityName, Mode=TwoWay}" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Column="3" Grid.Row="0"/>
+
+                                <StackPanel Orientation="Vertical" Grid.Column="4" Grid.Row="0">
+                                    <TextBlock Text="Выполнено:"/>
+                                    <TextBlock Text="{Binding CompletionStatus, Mode=TwoWay}" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Width="100" Height="100" Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+                        <TextBlock Text="                "/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Vertical">
+                        <TextBlock Text="Заявитель" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Creater, Mode=TwoWay}"/>
+                        <TextBlock Text=""/>
+                        <TextBlock Text=""/>
+                        <TextBlock Text="Исполнитель" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding TaskPerfomer, Mode=TwoWay}"/>
+                        <TextBlock Text=""/>
+                        <TextBlock Text=""/>
+                        <TextBlock Text="Наблюдатели:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Observers, Mode=TwoWay}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Popup>
+        <tb:TaskbarIcon
+      ToolTipText="hello world" x:Name="Notification" />
+        <TabControl Grid.ColumnSpan="2">
+            <TabItem Header="Заявки" x:Name="TaskTab">
+                <DataGrid x:Name="MainDataGrid" 
+					Style="{StaticResource AzureDataGrid}" 
+					ItemsSource="{Binding TaskModel, Mode=TwoWay}" 
+					AutoGenerateColumns="false" 
+                    RowDetailsVisibilityMode="Collapsed"
+					CanUserAddRows="False" LoadingRow="MainDataGrid_LoadingRow" SelectionChanged="MainDataGrid_SelectionChanged"
+					SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" LoadingRowDetails="MainDataGrid_LoadingRowDetails" Loaded="MainDataGrid_Loaded" BeginningEdit="MainDataGrid_BeginningEdit" AddingNewItem="MainDataGrid_AddingNewItem" >
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <Button Content="Маркировать статус" x:Name="MarkStatus" Click="MarkStatus_Click"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns >
+                        <DataGridTemplateColumn Header="№ Заявки" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock  Text="{Binding TaskId, Mode=TwoWay}" x:Name="TaskIdGrid" MouseEnter="TaskIdGrid_MouseEnter" MouseLeave="TaskIdGrid_MouseLeave"/>
+
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Заявитель" Binding="{Binding Creater, Mode=TwoWay}" x:Name="TaskCreatorGrid" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="" Width="SizeToCells" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding Image}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Статус заявки" Binding="{Binding TaskStatus, Mode=TwoWay}" x:Name="TaskStatusGrid" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Название заявки" Binding="{Binding TaskName, Mode=TwoWay}" x:Name="TaskNameGrid" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="ToolTip" Value="{Binding TaskName, Mode=TwoWay}"/>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Исполнитель" Binding="{Binding TaskPerfomer, Mode=TwoWay}" x:Name="TaskPerfomerGrid" IsReadOnly="True"/>
+                        <!--<DataGridTextColumn Header="Срок выполнения" Binding="{Binding TaskDeadLine, StringFormat=dd.mm.yyyy}"/>-->
+                        <DataGridTemplateColumn Header="План"  x:Name="DeadLine">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DatePicker x:Name="DeadLineDatePicker" DisplayDate="{Binding TaskDeadLine, Mode=TwoWay}" SelectedDate="{Binding TaskDeadLine, Mode=TwoWay}" SelectedDateChanged="DeadLineDatePicker_SelectedDateChanged"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn x:Name="divergence" Header="Расхождение" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Жизненный цикл заявки" x:Name="LifeTaskTab" MouseUp="LifeTaskTab_MouseUp">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ListView ItemsSource="{Binding TaskLife, Mode=TwoWay}" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Bisque" BorderThickness="1" Margin="3">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{Binding Image, Mode=TwoWay}" Width="16" Height="16"/>
+                                            <TextBlock Text=" " AllowDrop="True"/>
+                                            <TextBlock Text="{Binding Date, Mode=TwoWay}"/>
+                                            <TextBlock Text=" " AllowDrop="True"/>
+
+                                            <TextBlock Text="{Binding Editor, Mode=TwoWay}"/>
+                                        </StackPanel>
+
+                                        <TextBlock Text="{Binding Text, Mode=TwoWay}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Комментарии в заявке" x:Name="TaskCommentsTab">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ListView ItemsSource="{Binding TaskComment, Mode=TwoWay}" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Bisque" BorderThickness="1" Margin="3">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{Binding Image, Mode=TwoWay}" Width="16" Height="16"/>
+                                            <TextBlock Text=" " AllowDrop="True"/>
+                                            <TextBlock Text="{Binding Date, Mode=TwoWay}"/>
+                                            <TextBlock Text=" " AllowDrop="True"/>
+
+                                            <TextBlock Text="{Binding Editor, Mode=TwoWay}"/>
+                                        </StackPanel>
+
+                                        <TextBlock Text="{Binding Text, Mode=TwoWay}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Информация" Visibility="Hidden" x:Name="TaskInfoTab"/>
+        </TabControl>
+    </Grid>
+</Controls:MetroWindow>
+

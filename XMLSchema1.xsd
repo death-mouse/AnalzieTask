@@ -1,0 +1,17 @@
+﻿<xs:schema xmlns:tns="http://gradient.ru/ax2009/1C" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://gradient.ru/ax2009/1C">
+  <xs:element name="Контрагенты1С" type ="tns:Контрагенты1С"></xs:element>
+  <xs:complexType name="Контрагенты1С">
+    <xs:sequence>
+      <xs:element name="Контрагент" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="Код1С" type="xs:string" use="required"/>
+          <xs:attribute name="КодК" type="xs:string" use="required"/>
+          <xs:attribute name="КодП" type="xs:string" use="required"/>
+          <xs:attribute name="Наим" type="xs:string" use="required"/>
+          <xs:attribute name="ИНН" type="xs:decimal" use="required"/>
+          <xs:attribute name="КПП" type="xs:decimal" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
