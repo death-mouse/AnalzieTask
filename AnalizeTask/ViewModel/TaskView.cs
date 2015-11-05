@@ -597,6 +597,7 @@ namespace AnalizeTask.View
             string user;
             string what;
             bool changeStatus = false;
+            bool changeCommet = false;
             foreach (XElement change in changed)
             {
                 user = change.Element("Editor").Value;
@@ -612,12 +613,29 @@ namespace AnalizeTask.View
                     text += string.Format("Пользователь {0} изменил статус на {1}\n\r", user, filtererdTests[0].Name);
                     changeStatus = true;
                 }
+                if(change.Element("Comments") != null)
+                {
+                    user = change.Element("Editor").Value;
+                    text += string.Format("Пользователь {0} Написал комментарий {1}\n\r", user, change.Element("Comments").Value);
+                    changeCommet = true;
+                }
             }
             if(changeStatus)
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     AddNewStatus addComment = new AddNewStatus();
+
+                    addComment.DataContext = new AnalizeTask.Models.AddComment() { Comment = text, TaskId = _taskId };
+                    MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                    mainWindow.Notification.ShowCustomBalloon(addComment, System.Windows.Controls.Primitives.PopupAnimation.Slide, 500);
+                });
+            }
+            if (!changeStatus && changeCommet)
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    AddCommnet addComment = new AddCommnet();
 
                     addComment.DataContext = new AnalizeTask.Models.AddComment() { Comment = text, TaskId = _taskId };
                     MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;

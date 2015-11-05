@@ -64,7 +64,8 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
-        <TextBlock
+        
+            <TextBlock
       Margin="107,10,20,0"
       TextWrapping="Wrap"
       Height="Auto"
@@ -73,15 +74,19 @@
       FontWeight="Bold"
       Foreground="#FF575757" HorizontalAlignment="Right"><Run Text="По заявке "/><Run
         Text="{Binding Path=TaskId, Mode=TwoWay}"
-        Language="ru-ru" /><Run Text=" добавлен комментарий"/> </TextBlock>
-        <TextBlock
+        Language="ru-ru" /><Run Text=" добавлен комментарий"/></TextBlock>
+        <ScrollViewer>
+            <TextBlock
       Margin="19,92,10,49"
       TextWrapping="Wrap"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Auto"
+             ScrollViewer.CanContentScroll="True"
             Text="{Binding Path=Comment, Mode=TwoWay}">
-            
-        </TextBlock>
+
+            </TextBlock>
+        </ScrollViewer>
         <Image
     	Source="{Binding Path=IconSource}" Width="16" HorizontalAlignment="Left" Margin="19,0,0,23" Height="16" VerticalAlignment="Bottom" />
-
     </Grid>
 </UserControl>
