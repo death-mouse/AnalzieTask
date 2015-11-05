@@ -121,9 +121,11 @@ namespace AnalizeTask
                 }
                 if (!find)
                 {
-                    System.Drawing.Color color = System.Drawing.Color.White;
-                    var colorBrush = new System.Windows.Media.SolidColorBrush(this.ColorToColor(color));
+                    System.Drawing.Color color = System.Drawing.Color.Azure;
+                    var colorBrush = new System.Windows.Media.SolidColorBrush(this.ColorToColor(color, true));
                     e.Row.Background = colorBrush;
+                    
+                    
                 }
             }
             else
@@ -134,13 +136,19 @@ namespace AnalizeTask
             }
            
 
-            //MainDataGrid.UpdateLayout();
-            //MainDataGrid.UpdateDefaultStyle();
-            //MainDataGrid.Items.Refresh();
-
         }
-        private System.Windows.Media.Color ColorToColor(System.Drawing.Color color)
+        private System.Windows.Media.Color ColorToColor(System.Drawing.Color color, bool colorThem = false)
         {
+            if (colorThem)
+            {
+                if ((int)Properties.Settings.Default["Them"] == 0)
+                {
+                    color = System.Drawing.Color.Azure;
+                    return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+                }
+                else
+                    return System.Windows.Media.Color.FromArgb(1, 37, 37, 37);
+            }
             return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
         private void AddColor_Click(object sender, RoutedEventArgs e)
