@@ -16,6 +16,7 @@ using System.ComponentModel;
 using Xceed.Wpf.Toolkit;
 using Hardcodet.Wpf.TaskbarNotification;
 using System.Xml.Linq;
+using System.Threading;
 
 namespace AnalizeTask.View
 {
@@ -168,11 +169,6 @@ namespace AnalizeTask.View
             ClickCommand = new RelayCommand(arg => GetTask());
             ClickCommandAddTask = new RelayCommand(arg => addTask());
             ClickCommandDeleteTask = new RelayCommand(arg => deleteTask());
-            /*TaskModel = new ObservableCollection<AnalizeTask.Models.Task>();
-            ColorsModel = new ObservableCollection<ColorsModel>();
-            themModel = new ObservableCollection<ThemModel>();
-            TaskLife = new ObservableCollection<Models.TaskLife>();
-            TaskComment = new ObservableCollection<Models.TaskComment>();*/
             TaskModel = new BindingList<Models.Task>();
             ColorsModel = new BindingList<Models.ColorsModel>();
             themModel = new BindingList<ThemModel>();
@@ -181,11 +177,20 @@ namespace AnalizeTask.View
             TaskType = new BindingList<Models.TaskType>();
 
             initColor();
-           
-            //TaskModel.Add(new AnalizeTask.Models.Task() { TaskId = "46580" });
-            //TaskModel.Add(new AnalizeTask.Models.Task() { TaskId = "83795" });
             this.initFromFile();
             //this.GetTaskTherd();
+            if((bool)Properties.Settings.Default["AutoUpdate"])
+                this.thredStart();
+            
+        }
+        private void thredStart()
+        {
+            if ((bool)Properties.Settings.Default["AutoUpdate"])
+            {
+                Thread myThread = new Thread(ThreadGetTask);
+
+                myThread.Start();
+            }
         }
         private void initFromFile()
         {
@@ -292,6 +297,26 @@ namespace AnalizeTask.View
         {
             GetTaskTherd();
         }
+        private  void ThreadGetTask()
+        {
+            int autoUpdate = (int)Properties.Settings.Default["Refresh"];
+            Thread.Sleep(autoUpdate  * 10000);
+            DateTime start = DateTime.Now;
+            Application.Current.Dispatcher.Invoke((Action) async delegate
+            {
+                await GetTaskTherd();
+            });
+            Thread.Sleep(1000);
+            while (isRunAnalize == true)
+            {
+                Thread.Sleep(1000);
+            }
+            DateTime end = DateTime.Now;
+            DateTime toSettings = DateTime.Now - (end - start);
+            Properties.Settings.Default.LastAnalize = toSettings;
+            Properties.Settings.Default.Save();
+            thredStart();
+        }
         public async System.Threading.Tasks.Task<bool> getThredTask()
         {
             await GetTaskTherd();
@@ -328,8 +353,8 @@ namespace AnalizeTask.View
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             isRunAnalize = true;
-            AnalizeTask();
-           
+            AnalizeTask();            
+
         }
 
         private bool AnalizeOneTask(string _taskId)

@@ -10,6 +10,7 @@ using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using AnalizeTask.Notification;
+using System.Threading;
 
 
 namespace AnalizeTask
@@ -55,7 +56,7 @@ namespace AnalizeTask
                 divergence.Visibility = System.Windows.Visibility.Visible;
             else
                 divergence.Visibility = System.Windows.Visibility.Hidden;
-            //Notification.ShowCustomBalloon(new AnalizeTask.TaskStatusWindow(), System.Windows.Controls.Primitives.PopupAnimation.Slide, 4000);w
+            
            
 
 
@@ -95,10 +96,7 @@ namespace AnalizeTask
         private void MainDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             AnalizeTask.Models.Task task = e.Row.Item as AnalizeTask.Models.Task;
-            if (task.TaskId == "85853")
-            {
-                string test2 = "";
-            }    
+               
             if (System.IO.File.Exists(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"])))
             {
                 System.Xml.XmlDocument document = new System.Xml.XmlDocument();
@@ -190,9 +188,7 @@ namespace AnalizeTask
         }
         private void MainDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*FileTaskTab.Visibility = System.Windows.Visibility.Visible;
-            TaskCommentsTab.Visibility = System.Windows.Visibility.Visible;
-            LifeTaskTab.Visibility = System.Windows.Visibility.Visible;*/
+           
         }
         private void LifeTaskTab_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -204,7 +200,7 @@ namespace AnalizeTask
         }
         private void saveTask()
         {
-            //MainDataGrid.Items.Count;
+            
             if (MainDataGrid.Items.Count != 0)
             {
                 System.Xml.XmlDocument document = new System.Xml.XmlDocument();
@@ -245,7 +241,9 @@ namespace AnalizeTask
         {
             Properties.Settings.Default.Save();
             saveTask();
+
             //base.OnClosing(e);
+            System.Environment.Exit(1);
         }
         private void TaskIdGrid_MouseEnter(object sender, MouseEventArgs e)
         {
