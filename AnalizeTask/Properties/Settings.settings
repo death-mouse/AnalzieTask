@@ -38,5 +38,8 @@
     <Setting Name="FileStatusTaskColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">taskStatus.xml</Value>
     </Setting>
+    <Setting Name="LastAnalize" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

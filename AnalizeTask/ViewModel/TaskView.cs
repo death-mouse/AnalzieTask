@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using AnalizeTask.Models;
 using AnalizeTask.need;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ using MahApps.Metro.Controls.Dialogs;
 using System.ComponentModel;
 using Xceed.Wpf.Toolkit;
 using Hardcodet.Wpf.TaskbarNotification;
+using System.Xml.Linq;
 
 namespace AnalizeTask.View
 {
@@ -445,11 +447,11 @@ namespace AnalizeTask.View
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
 
-
-                    AddCommnet addComment = new AddCommnet();
+                   
+                    /*AddCommnet addComment = new AddCommnet();
                     addComment.DataContext = new AnalizeTask.Models.AddComment() { Comment = "Тестирование добавление комментария", TaskId = taskId };
                     MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                    mainWindow.Notification.ShowCustomBalloon(addComment, System.Windows.Controls.Primitives.PopupAnimation.Slide, 400);
+                    mainWindow.Notification.ShowCustomBalloon(addComment, System.Windows.Controls.Primitives.PopupAnimation.Slide, 400);*/
                 });
                 if (i == 1)
                 {
@@ -563,6 +565,7 @@ namespace AnalizeTask.View
                     }
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
+                        this.AnalazeChanged(taskId);
                         /*AddCommnet addComment = new AddCommnet();
                    
                         addComment.DataContext = new AnalizeTask.Models.AddComment() { Comment = "Тестирование добавление комментария", TaskId = taskId };
@@ -575,6 +578,52 @@ namespace AnalizeTask.View
                 }
             }
             
+        }
+        private void AnalazeChanged(String _taskId)
+        {
+            DateTime dateTime = (DateTime)Properties.Settings.Default["LastAnalize"];
+            /*DateTime dateTime = new DateTime();
+            dateTime = DateTime.Parse("31.08.2015 0:38:41");*/
+            
+            string xml = browser.GET(string.Format(string.Format("{0}api/TaskLifetime?taskid={1}", Properties.Settings.Default["URL"], _taskId)), Encoding.UTF8);
+
+            XDocument xmlDoc = XDocument.Parse(xml);
+            /*IEnumerable<XElement> tracks = from t in xmlDoc.Root.Elements("TaskLifetimes").Elements("TaskLifetime").Where
+                                                (t => t.Element("Date").Value == dateTime.ToString())
+                                                select t;*/
+            IEnumerable<XElement> changed = xmlDoc.Root.Descendants("TaskLifetimes").Elements("TaskLifetime").Where(
+                                                        t => (DateTime.Parse(t.Element("Date").Value) >= dateTime)).ToList();
+            string text="";
+            string user;
+            string what;
+            bool changeStatus = false;
+            foreach (XElement change in changed)
+            {
+                user = change.Element("Editor").Value;
+                if(change.Element("StatusId") != null)
+                {
+                    ObservableCollection<Models.TaskStatus> filtererdTests = new ObservableCollection<Models.TaskStatus>(TaskStatus.Where(t => t.Id == change.Element("StatusId").Value));
+                    if (filtererdTests.Count == 0)
+                    {
+                        this.addTaskStatus();
+                        filtererdTests = new ObservableCollection<Models.TaskStatus>(TaskStatus.Where(t => t.Id == change.Element("StatusId").Value));
+                        
+                    }
+                    text += string.Format("Пользователь {0} изменил статус на {1}\n\r", user, filtererdTests[0].Name);
+                    changeStatus = true;
+                }
+            }
+            if(changeStatus)
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    AddNewStatus addComment = new AddNewStatus();
+
+                    addComment.DataContext = new AnalizeTask.Models.AddComment() { Comment = text, TaskId = _taskId };
+                    MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                    mainWindow.Notification.ShowCustomBalloon(addComment, System.Windows.Controls.Primitives.PopupAnimation.Slide, 500);
+                });
+            }
         }
         private void addTaskStatus()
         {

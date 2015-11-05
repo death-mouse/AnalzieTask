@@ -64,7 +64,10 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
+        
         <TextBlock
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Auto"
       Margin="107,10,20,0"
       TextWrapping="Wrap"
       Height="Auto"
@@ -74,12 +77,17 @@
       Foreground="#FF575757" HorizontalAlignment="Right"><Run Text="По заявке "/><Run
         Text="{Binding Path=TaskId, Mode=TwoWay}"
         Language="ru-ru" /><Run Text=" изменился статус"/> </TextBlock>
-        <TextBlock
+        <ScrollViewer>
+            <TextBlock
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Auto"
+             ScrollViewer.CanContentScroll="True"
       Margin="19,92,10,49"
       TextWrapping="Wrap"
             Text="{Binding Path=Comment, Mode=TwoWay}">
-            
-        </TextBlock>
+
+            </TextBlock>
+        </ScrollViewer>
         <Image
     	Source="{Binding Path=IconSource}" Width="16" HorizontalAlignment="Left" Margin="19,0,0,23" Height="16" VerticalAlignment="Bottom" />
 

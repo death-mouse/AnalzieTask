@@ -84,7 +84,7 @@ namespace AnalizeTask.Notification
         {
             //if we're already running the fade-out animation, do not interrupt anymore
             //(makes things too complicated for the sample)
-            if (isClosing) return;
+            //if (isClosing) return;
 
             //the tray icon assigned this attached property to simplify access
             TaskbarIcon taskbarIcon = TaskbarIcon.GetParentTaskbarIcon(this);
@@ -92,6 +92,8 @@ namespace AnalizeTask.Notification
             /*taskbarIcon.reset
             taskbarIcon.ResetBalloonCloseTimer();
             taskbarIcon.CloseBalloon();*/
+            Popup pp = (Popup)Parent;
+            pp.IsOpen = false;
         }
 
 

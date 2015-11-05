@@ -166,5 +166,16 @@ namespace AnalizeTask.Properties {
                 this["FileStatusTaskColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastAnalize {
+            get {
+                return ((global::System.DateTime)(this["LastAnalize"]));
+            }
+            set {
+                this["LastAnalize"] = value;
+            }
+        }
     }
 }
