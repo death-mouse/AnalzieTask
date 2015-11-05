@@ -163,15 +163,31 @@
 
     </Controls:MetroWindow.Flyouts>
     <Grid>
-       
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="375*"/>
             <ColumnDefinition Width="508*"/>
         </Grid.ColumnDefinitions>
-        <Popup x:Name="pLink" Placement="Mouse" PopupAnimation="Slide" AllowsTransparency="True" StaysOpen="False" DataContext="{Binding TaskModel}" Grid.ColumnSpan="2">
+        <Popup x:Name="pLink" Placement="Mouse" PopupAnimation="Slide" AllowsTransparency="True" StaysOpen="False" DataContext="{Binding TaskModel}" Grid.ColumnSpan="2" Opacity="0.76">
+            <Popup.OpacityMask>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FFDC2B2B" Offset="1"/>
+                </LinearGradientBrush>
+            </Popup.OpacityMask>
             <Border BorderBrush="LightBlue" BorderThickness="2" Background="White" >
 
-                <Grid>
+                <Grid Opacity="0.65">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF6FE20F" Offset="0"/>
+                            <GradientStop Color="#FFA03535" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.Effect>
+                        <DropShadowEffect/>
+                    </Grid.Effect>
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -269,7 +285,7 @@
                             <Button Content="Маркировать статус" x:Name="MarkStatus" Click="MarkStatus_Click"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-                    
+
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Style.Triggers>
