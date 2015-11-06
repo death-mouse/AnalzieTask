@@ -9,6 +9,23 @@ namespace AnalizeTask.Models
         private string imageUrl;
         private string imageUrl24;
         private string name;
+        private bool end;
+
+        public bool End
+        {
+            get
+            {
+                return end;
+            }
+            set
+            {
+                if (end != value)
+                {
+                    end = value;
+                    OnPropertyChanged("End");
+                }
+            }
+        }
         private string color;
 
         public string Name

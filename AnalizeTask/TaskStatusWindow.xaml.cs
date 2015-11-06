@@ -60,12 +60,14 @@ namespace AnalizeTask
                     
                     System.Xml.XmlNode colorNode = node.SelectSingleNode("Color");
                     System.Xml.XmlNode idNode = node.SelectSingleNode("Id");
+                    System.Xml.XmlNode endNode = node.SelectSingleNode("End");
 
                     if (idNode.InnerText != taskStatus[0].Id)
                         continue;
                     find = true;
                     color = System.Drawing.Color.FromArgb(Convert.ToInt32(colorNode.InnerText));
                     colPicker.SelectedColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+                    endStatus.IsChecked = Convert.ToBoolean(endNode.InnerText);
                     break;
                 }
                 if (!find)
@@ -79,6 +81,7 @@ namespace AnalizeTask
         private void okBtn_Click(object sender, RoutedEventArgs e)
         {
             System.Drawing.Color color;
+            
             color = System.Drawing.Color.FromArgb(colPicker.SelectedColor.Value.R, colPicker.SelectedColor.Value.G, colPicker.SelectedColor.Value.B);
             BindingList<Models.TaskStatus> taskStatus = listView.ItemsSource as BindingList<Models.TaskStatus>;
             if (!System.IO.File.Exists(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"])))
@@ -99,6 +102,11 @@ namespace AnalizeTask
                 //color.A = colPicker.SelectedColor.Value.;
                 //children.InnerText = colPicker.SelectedColor.;
                 element.AppendChild(children);
+
+                children = document.CreateElement("End"); // даём имя
+                children.InnerText = Convert.ToString(endStatus.IsChecked);
+                element.AppendChild(children);
+
                 rootElement.AppendChild(element);
                 document.Save(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"]));
             }
@@ -112,12 +120,14 @@ namespace AnalizeTask
                 {
                     System.Xml.XmlNode colorNode = node.SelectSingleNode("Color");
                     System.Xml.XmlNode idNode = node.SelectSingleNode("Id");
+                    System.Xml.XmlNode endNode = node.SelectSingleNode("End");
 
                     if (idNode.InnerText != taskStatus[0].Id)
                         continue;
 
                     find = true;
                     colorNode.InnerText = Convert.ToString(color.ToArgb());
+                    endNode.InnerText = Convert.ToString(endStatus.IsChecked);
                 }
                 if (!find)
                 {
@@ -134,6 +144,10 @@ namespace AnalizeTask
                     //color.A = colPicker.SelectedColor.Value.;
                     //children.InnerText = colPicker.SelectedColor.;
                     element.AppendChild(children);
+                    children = document.CreateElement("End"); // даём имя
+                    children.InnerText = Convert.ToString(taskStatus[0].End);
+                    element.AppendChild(children);
+                    
                     rootElement.AppendChild(element);
                 }
                 document.Save(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"]));

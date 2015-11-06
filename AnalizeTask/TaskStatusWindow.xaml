@@ -9,13 +9,14 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:local2="clr-namespace:AnalizeTask.View"
     mc:Ignorable="d"
-        Title="Маркировка статуса" Height="156" Width="313" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Маркировка статуса" Height="186" Width="313" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Controls:MetroWindow.DataContext>
         <local2:StatusTaskView/>
     </Controls:MetroWindow.DataContext>
-    <Grid Margin="0,0,0,31" x:Name="MaindGrid">
+    <Grid Margin="0,0,0,5" x:Name="MaindGrid">
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,151">
+           
             <ListView ItemsSource="{Binding TaskStatus, Mode=TwoWay}" Width="305" Margin="0,0,0,-60" x:Name="listView">
                 <!--<TextBlock Text="Название статуса"/>-->
                 <ListView.ItemTemplate>
@@ -32,8 +33,9 @@
                 </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
+        <CheckBox Content="Конечный статус" IsChecked="{Binding End, Mode=TwoWay}" Name="endStatus"/>
         <xctk:ColorPicker DisplayColorAndName="True" x:Name="colPicker" SelectedColorChanged="colPicker_SelectedColorChanged" VerticalAlignment="Top" Height="22" RenderTransformOrigin="0.5,0.5" Margin="0,38,0,0" />
-        <Button x:Name="okBtn" Content="Применить" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" Width="75" Click="okBtn_Click"/>
-        <Button x:Name="cancelBnt" Content="Отменть" HorizontalAlignment="Left" Margin="222,65,0,0" VerticalAlignment="Top" Width="75" Click="cancelBnt_Click_1"/>
+        <Button x:Name="okBtn" Content="Применить" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Width="75" Click="okBtn_Click"/>
+        <Button x:Name="cancelBnt" Content="Отменть" HorizontalAlignment="Left" Margin="222,117,0,0" VerticalAlignment="Top" Width="75" Click="cancelBnt_Click_1"/>
     </Grid>
 </Controls:MetroWindow>

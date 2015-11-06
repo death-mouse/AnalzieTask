@@ -598,11 +598,7 @@ namespace AnalizeTask.View
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         this.AnalazeChanged(taskId);
-                        /*AddCommnet addComment = new AddCommnet();
-                   
-                        addComment.DataContext = new AnalizeTask.Models.AddComment() { Comment = "Тестирование добавление комментария", TaskId = taskId };
-                        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                        mainWindow.Notification.ShowCustomBalloon(addComment, System.Windows.Controls.Primitives.PopupAnimation.Slide, 500);*/
+                        string test = "";
                     });
                         progressCount += progressOne;
 
@@ -795,7 +791,7 @@ namespace AnalizeTask.View
                     else
                         dateTIme = DateTime.Now;
 
-                    TaskModel.Add(new Task() { TaskId = taskId, TaskDeadLine = dateTIme });
+                    TaskModel.Add(new Task() { TaskId = taskId, TaskDeadLine = dateTIme, NeedAnalize = true});
                     
             
                 }
