@@ -494,6 +494,31 @@ namespace AnalizeTask.View
 
             return true;
         }
+        private bool needAnalizeDate(string _statusId)
+        {
+            bool ret = false;
+            if (!(bool)Properties.Settings.Default["VisibleDedLine"])
+                return false;
+            if (System.IO.File.Exists(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"])))
+            {
+                System.Xml.XmlDocument document = new System.Xml.XmlDocument();
+                document.Load(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"]));
+                System.Xml.XmlNodeList nodeList = document.SelectNodes("TasksStatuses/TaskStatus");
+                foreach (System.Xml.XmlNode node in nodeList)
+                {
+
+                    System.Xml.XmlNode idNode = node.SelectSingleNode("Id");
+
+                    if (idNode.InnerText != _statusId)
+                        continue;
+                    System.Xml.XmlNode endNode = node.SelectSingleNode("End");
+                    ret = Convert.ToBoolean(endNode.InnerText);
+                    break;
+                }
+            }
+
+            return ret;
+        }
         private void AnalizeTask()
         {
             double progressCount;
@@ -583,7 +608,12 @@ namespace AnalizeTask.View
                     TaskModel[i].StatusName = statusName;
                     TaskModel[i].PriorityName = priorityName;
                     TaskModel[i].CompletionStatus = completionStatus;
-
+                    if (!this.needAnalizeDate(filtererdTests[0].Id))
+                    {
+                        if (TaskModel[i].Divergence == null)
+                            TaskModel[i].Divergence = "";
+                        TaskModel[i].Divergence = Convert.ToString((TaskModel[i].TaskDeadLine - DateTime.Now).Days);
+                    }
                     if (i == 1)
                     {
                         SelectedIndex = 1;

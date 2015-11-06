@@ -22,7 +22,22 @@ namespace AnalizeTask.Models
         private string statusName;
         private string completionStatus;
         private bool needAnalize;
-
+        private string divergence;
+        public string Divergence
+        {
+            get
+            {
+                return divergence;
+            }
+            set
+            {
+                if (divergence != value)
+                {
+                    divergence = value;
+                    OnPropertyChanged("Divergence");
+                }
+            }
+        }
         private string statusId;
         public string StatusId
         {

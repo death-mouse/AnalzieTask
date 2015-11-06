@@ -342,7 +342,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn x:Name="divergence" Header="Расхождение" IsReadOnly="True"/>
+                        <DataGridTextColumn x:Name="divergence" Header="Расхождение" IsReadOnly="True" Binding="{Binding Divergence, Mode=TwoWay}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
