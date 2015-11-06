@@ -16,7 +16,7 @@
         EnableDWMDropShadow="True"
         ResizeMode="CanResizeWithGrip"
         WindowTransitionsEnabled="False"
-        WindowStartupLocation="CenterScreen" Closing="MetroWindow_Closing_1" Loaded="MetroWindow_Loaded_1" Unloaded="MetroWindow_Unloaded_1" Activated="MetroWindow_Activated" Initialized="MetroWindow_Initialized" >
+        WindowStartupLocation="CenterScreen" Closing="MetroWindow_Closing_1" Loaded="MetroWindow_Loaded_1" >
     <Controls:MetroWindow.DataContext>
         <local:TaskView/>
     </Controls:MetroWindow.DataContext>
@@ -279,10 +279,11 @@
 					AutoGenerateColumns="false" 
                     RowDetailsVisibilityMode="Collapsed"
 					CanUserAddRows="False" LoadingRow="MainDataGrid_LoadingRow" SelectionChanged="MainDataGrid_SelectionChanged"
-					SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" LoadingRowDetails="MainDataGrid_LoadingRowDetails" Loaded="MainDataGrid_Loaded" BeginningEdit="MainDataGrid_BeginningEdit" AddingNewItem="MainDataGrid_AddingNewItem" >
+					SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"   BeginningEdit="MainDataGrid_BeginningEdit" AddingNewItem="MainDataGrid_AddingNewItem" >
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <Button Content="Маркировать статус" x:Name="MarkStatus" Click="MarkStatus_Click"/>
+                            <Button Content="Удалить маркировку статуса" x:Name="DeleteMarkStatus" Click="DeleteMarkStatus_Click"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
 

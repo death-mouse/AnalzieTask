@@ -386,10 +386,7 @@ namespace AnalizeTask
             /**/
         }
 
-        private void MetroWindow_Unloaded_1(object sender, RoutedEventArgs e)
-        {
-
-        }
+      
 
         private void MetroWindow_Activated(object sender, EventArgs e)
         {
@@ -404,10 +401,7 @@ namespace AnalizeTask
 
         }
 
-        private void MetroWindow_Initialized(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void MainDataGrid_LoadingRowDetails(object sender, DataGridRowDetailsEventArgs e)
         {
@@ -416,10 +410,7 @@ namespace AnalizeTask
             MainDataGrid.Items.Refresh();
         }
 
-        private void MainDataGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
+       
 
         private void MainDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
@@ -433,6 +424,68 @@ namespace AnalizeTask
             MainDataGrid.UpdateLayout();
             MainDataGrid.UpdateDefaultStyle();
             MainDataGrid.Items.Refresh();
+        }
+
+       
+
+        private void DeleteMarkStatus_Click(object sender, RoutedEventArgs e)
+        {
+            View.TaskView taskView = (View.TaskView)MainDataGrid.DataContext;
+
+            TaskStatusWindow window = new TaskStatusWindow();
+
+            BindingList<Models.Task> taskModel = taskView.TaskModel;
+            Models.Task task = (Models.Task)MainDataGrid.Items[MainDataGrid.SelectedIndex];
+            BindingList<Models.TaskStatus> taskStatus = taskView.TaskStatus;
+            BindingList<Models.TaskStatus> taskStatusNew = new BindingList<Models.TaskStatus>();
+            View.StatusTaskView statusTaskView = (View.StatusTaskView)window.DataContext;
+
+            ObservableCollection<AnalizeTask.Models.TaskStatus> filtererdTests;
+            if (task.StatusId != null)
+            {
+                filtererdTests = new ObservableCollection<Models.TaskStatus>(taskStatus.Where(t => t.Id == task.StatusId));
+                if (statusTaskView.TaskStatus == null)
+                    statusTaskView.TaskStatus = new BindingList<Models.TaskStatus>();
+                statusTaskView.TaskStatus.Add(new Models.TaskStatus() { Name = filtererdTests[0].Name, Description = filtererdTests[0].Description, Id = filtererdTests[0].Id, ImageUrl = filtererdTests[0].ImageUrl, ImageUrl24 = filtererdTests[0].ImageUrl24 });
+
+                if (System.IO.File.Exists(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"])))
+                {
+                    System.Xml.XmlDocument document = new System.Xml.XmlDocument();
+                    document.Load(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"]));
+                    System.Xml.XmlNodeList nodeList = document.SelectNodes("TasksStatuses/TaskStatus");
+
+                    foreach (System.Xml.XmlNode node in nodeList)
+                    {
+                        System.Xml.XmlNode colorNode = node.SelectSingleNode("Color");
+                        System.Xml.XmlNode idNode = node.SelectSingleNode("Id");
+
+                        if (idNode.InnerText != task.StatusId)
+                            continue;
+                        //int i = 0;
+                        idNode.RemoveAll();
+                        int count = MainDataGrid.Items.Count;
+                        for (int i = 0; i != MainDataGrid.Items.Count; i++)
+                        {
+                            Models.Task taskFind = (Models.Task)MainDataGrid.Items[i];
+                            if (taskFind.StatusId != task.StatusId)
+                                continue;
+                            DataGridRow row = (DataGridRow)MainDataGrid.ItemContainerGenerator.ContainerFromIndex(i);
+                            if (row != null)
+                            {
+                                MainDataGrid.UpdateLayout();
+                                MainDataGrid.ScrollIntoView(MainDataGrid.Items[i]);
+                                System.Drawing.Color color = System.Drawing.Color.FromArgb(Convert.ToInt32(colorNode.InnerText));
+                                var colorBrush = new System.Windows.Media.SolidColorBrush(this.ColorToColor(color, true));
+                                row.Background = colorBrush;
+                            }
+
+
+                        }
+                        break;
+                    }
+                    document.Save(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"]));
+                }
+            }
         }
     }
     public static class PasswordHelper
