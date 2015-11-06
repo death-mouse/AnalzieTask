@@ -284,6 +284,7 @@
                         <ContextMenu>
                             <Button Content="Маркировать статус" x:Name="MarkStatus" Click="MarkStatus_Click"/>
                             <Button Content="Удалить маркировку статуса" x:Name="DeleteMarkStatus" Click="DeleteMarkStatus_Click"/>
+                            <Button Content="Импорт заявок" x:Name="ImportTask" Click="ImportTask_Click"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
 

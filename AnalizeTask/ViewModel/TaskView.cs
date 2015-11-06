@@ -508,6 +508,8 @@ namespace AnalizeTask.View
             {
                 string taskInfo = browser.GET(string.Format("{0}/api/task/{1}",Properties.Settings.Default["URL"],task.TaskId) , Encoding.UTF8);
                 XmlDocument newXmlDocument = new XmlDocument();
+                if (taskInfo == null)
+                    browser.GET(string.Format("{0}/api/task/{1}", Properties.Settings.Default["URL"], task.TaskId), Encoding.UTF8);
                 newXmlDocument.LoadXml(taskInfo);
                 foreach (XmlElement xmlElement in newXmlDocument.DocumentElement)
                 {
@@ -722,8 +724,7 @@ namespace AnalizeTask.View
 
             }
         }
-        
-
+       
         private async void addTask()
         {
            
@@ -771,7 +772,31 @@ namespace AnalizeTask.View
             }
             
         }
+        public void importFromCsv(string _fileName)
+        {
+            System.IO.StreamReader sr = new System.IO.StreamReader(_fileName);
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] split = line.Split(new char[] { ';' });
+                ObservableCollection<AnalizeTask.Models.Task> filtererdTests;
+                filtererdTests = new ObservableCollection<AnalizeTask.Models.Task>(TaskModel.Where(t => t.TaskId == split[0]));
+                if (filtererdTests.Count == 0)
+                {
+                    string taskId = split[0];
+                    DateTime dateTIme;
+                    if (split.Length == 2)
+                        dateTIme = Convert.ToDateTime(split[1]);
+                    else
+                        dateTIme = DateTime.Now;
 
+                    TaskModel.Add(new Task() { TaskId = taskId, TaskDeadLine = dateTIme });
+                    
+            
+                }
+                this.GetTask();
+            }
+        }
         private async void deleteTask()
         {
             string text = "";

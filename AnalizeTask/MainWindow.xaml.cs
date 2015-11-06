@@ -194,6 +194,7 @@ namespace AnalizeTask
         {
             
         }
+
         private void SaveTask_Click(object sender, RoutedEventArgs e)
         {
             this.saveTask();
@@ -237,6 +238,7 @@ namespace AnalizeTask
                 document.Save(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileName"]));
             }
         }
+
         private void MetroWindow_Closing_1(object sender, CancelEventArgs e)
         {
             Properties.Settings.Default.Save();
@@ -245,6 +247,7 @@ namespace AnalizeTask
             //base.OnClosing(e);
             System.Environment.Exit(1);
         }
+
         private void TaskIdGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             System.Windows.Controls.TextBlock textBox = ( System.Windows.Controls.TextBlock)sender;
@@ -258,10 +261,12 @@ namespace AnalizeTask
             pLink.IsOpen = false;
             pLink.IsOpen = true;
         }
+
         private void TaskIdGrid_MouseLeave(object sender, MouseEventArgs e)
         {
             pLink.IsOpen = false;
         }
+
         private void DeadLineDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             AnalizeTask.View.TaskView taskView;
@@ -273,6 +278,7 @@ namespace AnalizeTask
             taskView.TaskModel[selectedIndex].TaskDeadLine = (DateTime)datePicker.SelectedDate;
 
         }
+
         private void WindowsTaskStatus_Click(object sender, RoutedEventArgs e)
         {
            View.TaskView taskView = (View.TaskView)MainDataGrid.DataContext;
@@ -296,6 +302,7 @@ namespace AnalizeTask
             window.ShowDialog();
             
         }
+
         private void MarkStatus_Click(object sender, RoutedEventArgs e)
         {
             View.TaskView taskView = (View.TaskView)MainDataGrid.DataContext;
@@ -355,6 +362,7 @@ namespace AnalizeTask
                 }
             }
         }
+
         public void updateLyout()
         {
             MainDataGrid.UpdateLayout();
@@ -386,8 +394,6 @@ namespace AnalizeTask
             /**/
         }
 
-      
-
         private void MetroWindow_Activated(object sender, EventArgs e)
         {
             MainDataGrid.UpdateLayout();
@@ -399,18 +405,14 @@ namespace AnalizeTask
             MainDataGrid.SelectedIndex = 0;
             MainDataGrid.ScrollIntoView(MainDataGrid.Items[0]);
 
-        }
-
-      
+        }    
 
         private void MainDataGrid_LoadingRowDetails(object sender, DataGridRowDetailsEventArgs e)
         {
             MainDataGrid.UpdateLayout();
             MainDataGrid.UpdateDefaultStyle();
             MainDataGrid.Items.Refresh();
-        }
-
-       
+        }    
 
         private void MainDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
@@ -486,6 +488,28 @@ namespace AnalizeTask
                     document.Save(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileStatusTaskColor"]));
                 }
             }
+        }
+
+        private void ImportTask_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = ""; // Default file name
+            dlg.DefaultExt = ".csv"; // Default file extension
+            dlg.Filter = "CSV documents (.csv)|*.csv"; // Filter files by extension
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true)
+            {
+                // Open document
+                string filename = dlg.FileName;
+                View.TaskView taskView;
+                taskView = (AnalizeTask.View.TaskView)MainDataGrid.DataContext;
+                taskView.importFromCsv(filename);
+            }
+
         }
     }
     public static class PasswordHelper
