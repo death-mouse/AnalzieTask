@@ -21,6 +21,7 @@ namespace AnalizeTask.Models
         private string priorityName;
         private string statusName;
         private string completionStatus;
+        private bool needAnalize;
 
         private string statusId;
         public string StatusId
@@ -35,6 +36,22 @@ namespace AnalizeTask.Models
                 {
                     statusId = value;
                     OnPropertyChanged("StatusId");
+                }
+            }
+        }
+
+        public bool NeedAnalize
+        {
+            get
+            {
+                return needAnalize;
+            }
+            set
+            {
+                if (needAnalize != value)
+                {
+                    needAnalize = value;
+                    OnPropertyChanged("NeedAnalize");
                 }
             }
         }

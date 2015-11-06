@@ -300,6 +300,14 @@
                         </Style>
                     </DataGrid.CellStyle>
                     <DataGrid.Columns >
+                        <!--<DataGridCheckBoxColumn Header="Отслеживать" Binding="{Binding NeedAnalize, Mode=TwoWay}"/>-->
+                        <DataGridTemplateColumn Width="77" Header="Следить">
+                        <DataGridTemplateColumn.CellTemplate >
+                            <DataTemplate>
+                                    <CheckBox  IsChecked="{Binding NeedAnalize, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="№ Заявки" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

@@ -233,6 +233,9 @@ namespace AnalizeTask
                     children = document.CreateElement("DeadLine"); // даём имя
                     children.InnerText = itemCollection.TaskDeadLine.ToShortDateString();
                     element.AppendChild(children);
+                    children = document.CreateElement("NeedAnalize"); // даём имя
+                    children.InnerText = Convert.ToString(itemCollection.NeedAnalize);
+                    element.AppendChild(children);
                     rootElement.AppendChild(element);
                 }
                 document.Save(string.Format(@"{0}\{1}", Environment.CurrentDirectory, Properties.Settings.Default["FileName"]));
@@ -416,9 +419,9 @@ namespace AnalizeTask
 
         private void MainDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            MainDataGrid.UpdateLayout();
+            /*MainDataGrid.UpdateLayout();
             MainDataGrid.UpdateDefaultStyle();
-            MainDataGrid.Items.Refresh();
+            MainDataGrid.Items.Refresh();*/
         }
 
         private void MainDataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)

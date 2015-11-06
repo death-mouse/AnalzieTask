@@ -211,6 +211,7 @@ namespace AnalizeTask.View
                         string taskPerfomer;
                         string image;
                         DateTime deadLine;
+                        bool needAnalize = false;
 
                         taskId = xmlElement.GetElementsByTagName("TaskId")[0].InnerText;
                         creater = xmlElement.GetElementsByTagName("Creater")[0].InnerText;
@@ -219,7 +220,9 @@ namespace AnalizeTask.View
                         image = xmlElement.GetElementsByTagName("Image")[0].InnerText;
                         taskPerfomer = xmlElement.GetElementsByTagName("TaskPerfomer")[0].InnerText;
                         deadLine = Convert.ToDateTime(xmlElement.GetElementsByTagName("DeadLine")[0].InnerText);
-                        TaskModel.Add(new Task() { TaskId = taskId, Creater = creater, Image = image, TaskName = taskName, TaskPerfomer = taskPerfomer, TaskStatus = taskStatus, TaskDeadLine = deadLine });
+                        if (xmlElement.GetElementsByTagName("NeedAnalize")[0] != null)
+                            needAnalize = Convert.ToBoolean(xmlElement.GetElementsByTagName("NeedAnalize")[0].InnerText);
+                        TaskModel.Add(new Task() {NeedAnalize = needAnalize, TaskId = taskId, Creater = creater, Image = image, TaskName = taskName, TaskPerfomer = taskPerfomer, TaskStatus = taskStatus, TaskDeadLine = deadLine });
                         if (i == 1)
                         {
                             SelectedIndex = 1;
@@ -506,6 +509,8 @@ namespace AnalizeTask.View
             progressCount = 0;
             foreach (Task task in TaskModel)
             {
+                if (!task.NeedAnalize)
+                    continue;
                 string taskInfo = browser.GET(string.Format("{0}/api/task/{1}",Properties.Settings.Default["URL"],task.TaskId) , Encoding.UTF8);
                 XmlDocument newXmlDocument = new XmlDocument();
                 if (taskInfo == null)
@@ -747,7 +752,7 @@ namespace AnalizeTask.View
                 string notAddTask = "";
                 foreach (string task in taskNumbers)
                 {
-                    TaskModel.Add(new Task() { TaskId = task });
+                    TaskModel.Add(new Task() { TaskId = task, NeedAnalize = true });
                     bool analizeOne = AnalizeOneTask(task);
                     if (analizeOne)
                     {
