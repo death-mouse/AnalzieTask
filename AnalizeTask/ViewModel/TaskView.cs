@@ -303,7 +303,7 @@ namespace AnalizeTask.View
         private  void ThreadGetTask()
         {
             int autoUpdate = (int)Properties.Settings.Default["Refresh"];
-            Thread.Sleep(autoUpdate * 60 * 10000);
+            Thread.Sleep(autoUpdate * 60 * 1000);
             DateTime start = DateTime.Now;
             Application.Current.Dispatcher.Invoke((Action) async delegate
             {
@@ -316,7 +316,7 @@ namespace AnalizeTask.View
             }
             DateTime end = DateTime.Now;
             DateTime toSettings = DateTime.Now - (end - start);
-            Properties.Settings.Default.LastAnalize = toSettings;
+            Properties.Settings.Default["LastAnalize"] = toSettings;
             Properties.Settings.Default.Save();
             thredStart();
         }
